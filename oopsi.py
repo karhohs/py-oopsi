@@ -67,7 +67,7 @@ def oopsi_init_par(F,dt):
     P = {'T':T,'dt':dt,'gamma':gam,'alpha':a,'beta':b,'sigma':sig,'lambda':lam}
     return F, P
 # map estimator of F
-def oopsi_est_map(F,P):    
+def oopsi_est_map(F,P):
     # extract parameters from dict (turples)
     T,dt,gam,a,b,sig,lam = \
         (P[k] for k in ('T','dt','gamma','alpha','beta','sigma','lambda'))
@@ -129,7 +129,7 @@ def oopsi_est_par(n,C,F,P):
     mse = np.dot(D.T,D)
     sig = np.sqrt(mse/T) # RMS of residual error
     lam = T / (dt*np.sum(n)) # inverse of firing rate, n should be normalized
-    # packup    
+    # packup
     P = {'T':T,'dt':dt,'gamma':gam,'alpha':a,'beta':b,'sigma':sig,'lambda':lam}
     return P
 # implement fast-oopsi
@@ -142,9 +142,9 @@ def fast(F,dt=0.02,iter_max=1,update=True):
     update   - if we are iterating to estimate parameters
     """
     # initialize parameters
-    F,P = oopsi_init_par(F,dt) 
+    F,P = oopsi_init_par(F,dt)
     # one-shot Newton-Raphson
-    n,C,post = oopsi_est_map(F,P) 
+    n,C,post = oopsi_est_map(F,P)
     post_max = post
     n_best = n
     C_best = C
@@ -167,8 +167,8 @@ def fast(F,dt=0.02,iter_max=1,update=True):
         if np.abs((ml[i]-ml[i-1])/ml[i])<1e-3 or any(np.abs(ml[:i]-ml[i])<1e-5):
             # imax = i
             break;
-    return n_best, C_best
-    
+    return n_best, C_best, P
+
 """
 implement wiener filter,
 """
@@ -209,7 +209,7 @@ def wiener(F,dt=0.020,iter_max=20,update=True):
             break
     n = n/n.max()
     return n, C
-    
+
 """
 implement discretize, bins can be [threshold] or numOfBins(>=2)
 """
